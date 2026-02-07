@@ -13,7 +13,7 @@ on:
 
 env:
   SCHEME: GitNotify
-  PROJECT_PATH: GitNotify/GitNotify.xcodeproj
+  PROJECT_PATH: GitNotify.xcodeproj
 
 jobs:
   build:
