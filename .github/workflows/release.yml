@@ -27,7 +27,7 @@ jobs:
       - name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '15.0'
+          xcode-version: '15.4'
       
       - name: Show Xcode Version
         run: xcodebuild -version
@@ -40,6 +40,7 @@ jobs:
       
       - name: Build Release
         run: |
+          set -o pipefail
           xcodebuild -project ${{ env.PROJECT_PATH }} \
                      -scheme ${{ env.SCHEME }} \
                      -configuration Release \
@@ -47,7 +48,16 @@ jobs:
                      -destination 'generic/platform=macOS' \
                      CODE_SIGN_IDENTITY="-" \
                      CODE_SIGNING_REQUIRED=NO \
-                     build
+                     build 2>&1 | tee build.log
+        continue-on-error: false
+      
+      - name: Upload Build Log on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          retention-days: 7
       
       - name: Verify Build Output
         run: |
