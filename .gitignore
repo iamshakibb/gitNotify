@@ -1,0 +1,266 @@
+# =============================================================================
+# GitNotify - .gitignore for macOS Swift Application
+# =============================================================================
+
+# =============================================================================
+# Xcode
+# =============================================================================
+
+## User settings - NEVER commit these
+xcuserdata/
+*.xcuserstate
+*.xcuserdatad/
+
+## Compatibility with Xcode 8 and earlier
+*.xcscmblueprint
+*.xccheckout
+
+## Xcode Playground
+timeline.xctimeline
+playground.xcworkspace
+
+## Shared schemes (uncomment if using shared schemes)
+# !*.xcscheme
+
+# =============================================================================
+# Swift Package Manager
+# =============================================================================
+
+.build/
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.swiftpm/xcode/xcuserdata/
+.swiftpm/configuration/
+
+## Package.resolved - Uncomment to track exact dependency versions
+# Package.resolved
+
+# =============================================================================
+# CocoaPods
+# =============================================================================
+
+Pods/
+*.xcworkspace
+!default.xcworkspace
+
+# =============================================================================
+# Carthage
+# =============================================================================
+
+Carthage/Build/
+Carthage/Checkouts/
+
+# =============================================================================
+# Fastlane
+# =============================================================================
+
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
+
+# =============================================================================
+# macOS System Files
+# =============================================================================
+
+.DS_Store
+**/.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# =============================================================================
+# Build Output & Derived Data
+# =============================================================================
+
+build/
+Build/
+DerivedData/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Archives
+*.xcarchive
+
+# Playgrounds
+*.playground/*
+
+# =============================================================================
+# Distribution & Releases
+# =============================================================================
+
+dist/
+release/
+*.dmg
+*.zip
+*.pkg
+*.app
+
+# =============================================================================
+# Secrets & Environment Variables - CRITICAL
+# =============================================================================
+
+# Environment files
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+*.local
+
+# Certificates and keys
+*.pem
+*.p12
+*.p8
+*.key
+*.cer
+*.der
+*.mobileprovision
+*.provisionprofile
+
+# Keychain exports
+*.keychain
+*.keychain-db
+
+# Secret configuration files
+Secrets.swift
+Secrets/
+secrets/
+credentials/
+*.secret
+*.secrets
+
+# API Keys file (if used)
+APIKeys.swift
+APIKeys.plist
+
+# =============================================================================
+# IDE & Editor Settings
+# =============================================================================
+
+# JetBrains IDEs (AppCode, etc.)
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.*.swp
+.*.swo
+Session.vim
+.netrwhist
+tags
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# =============================================================================
+# Test Output & Coverage
+# =============================================================================
+
+*.xcresult
+*.xcresult/
+coverage/
+*.gcda
+*.gcno
+lcov.info
+*.profraw
+*.profdata
+test-results/
+test-output/
+
+# =============================================================================
+# Crash Logs & Debugging
+# =============================================================================
+
+*.crash
+*.ips
+crashlytics-build.properties
+crashlytics.properties
+
+# =============================================================================
+# Code Injection & Hot Reload
+# =============================================================================
+
+iOSInjectionProject/
+.injection.xcodeproj
+
+# =============================================================================
+# Miscellaneous
+# =============================================================================
+
+# Backup files
+*.bak
+*.backup
+*.orig
+*.tmp
+*.temp
+
+# Log files
+*.log
+logs/
+
+# Database files (runtime generated)
+*.sqlite
+*.sqlite3
+*.db
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+
+# Cache directories
+.cache/
+cache/
+Caches/
+
+# Node.js (if using any JS tooling)
+node_modules/
+
+# Ruby (if using CocoaPods/Fastlane)
+vendor/bundle/
+.bundle/
+Gemfile.lock
+
+# Export options (CI/CD)
+ExportOptions.plist
+
+# Tuist (if using)
+Derived/
+
+# =============================================================================
+# GitHub Actions Local Testing
+# =============================================================================
+
+.act
+.actrc

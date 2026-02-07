@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://github.com/yourusername/GitNotify#readme
+    about: Check out the README for documentation and troubleshooting
+  - name: GitHub Discussions
+    url: https://github.com/yourusername/GitNotify/discussions
+    about: Ask questions and share ideas with the community
