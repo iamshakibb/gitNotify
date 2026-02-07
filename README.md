@@ -14,6 +14,7 @@ A native macOS menu bar application that delivers GitHub notifications directly 
 - [Requirements](#requirements)
 - [Installation](#installation)
   - [Download Release (Recommended)](#option-1-download-release-recommended)
+  - [Bypass Gatekeeper](#bypass-gatekeeper-required-for-first-launch)
   - [Build from Source](#option-2-build-from-source)
   - [Using Homebrew](#option-3-using-homebrew-coming-soon)
 - [Setup Guide](#setup-guide)
@@ -96,9 +97,27 @@ A native macOS menu bar application that delivers GitHub notifications directly 
 1. Go to the [Releases](https://github.com/yourusername/GitNotify/releases) page
 2. Download the latest `GitNotify.dmg` file
 3. Open the DMG and drag GitNotify to your Applications folder
-4. Launch GitNotify from Applications or Spotlight
+4. **Important:** Before first launch, see [Bypass Gatekeeper](#bypass-gatekeeper-required-for-first-launch) below
+5. Launch GitNotify from Applications or Spotlight
 
-> **Note for first launch:** macOS may show a security warning. Right-click the app and select "Open" to bypass Gatekeeper, or go to System Settings > Privacy & Security to allow the app.
+#### Bypass Gatekeeper (Required for First Launch)
+
+This app is not notarized with Apple (requires $99/year Developer Program). macOS will show a security warning when you first try to open it. Use **one** of these methods:
+
+**Method 1 - Terminal (Recommended):**
+```bash
+xattr -cr /Applications/GitNotify.app
+```
+
+**Method 2 - System Settings:**
+1. Try to open the app (it will be blocked)
+2. Go to **System Settings > Privacy & Security**
+3. Scroll down and click **"Open Anyway"** next to the GitNotify message
+
+**Method 3 - Right-click:**
+1. Right-click (or Control-click) on GitNotify.app in Applications
+2. Select **"Open"** from the context menu
+3. Click **"Open"** in the dialog that appears (you may need to do this twice)
 
 ### Option 2: Build from Source
 
@@ -700,15 +719,27 @@ Follow [Semantic Versioning](https://semver.org/):
 </details>
 
 <details>
-<summary><strong>macOS Security Warning on First Launch</strong></summary>
+<summary><strong>macOS Security Warning / "App is Damaged" Error</strong></summary>
 
-**Cause**: App is not notarized (if built from source).
+**Cause**: App is not notarized with Apple. This is normal for apps distributed outside the Mac App Store without a paid Apple Developer account ($99/year).
 
-**Solution**:
+**Solution** (use one of these methods):
 
-1. Right-click GitNotify.app → Open
-2. Click "Open" in the dialog
-3. Or: System Settings → Privacy & Security → Allow anyway
+**Method 1 - Terminal (Most Reliable):**
+```bash
+xattr -cr /Applications/GitNotify.app
+```
+Then open the app normally.
+
+**Method 2 - System Settings:**
+1. Try to open the app (it will be blocked)
+2. Go to **System Settings > Privacy & Security**
+3. Scroll down and click **"Open Anyway"** next to the GitNotify message
+
+**Method 3 - Right-click:**
+1. Right-click (or Control-click) on GitNotify.app
+2. Select **"Open"** from the menu
+3. Click **"Open"** in the dialog (may need to do this twice)
 </details>
 
 <details>

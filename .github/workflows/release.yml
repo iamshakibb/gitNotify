@@ -2,6 +2,8 @@ name: Build and Release
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
   workflow_dispatch:
@@ -50,8 +52,6 @@ jobs:
                      -derivedDataPath build \
                      -destination 'platform=macOS,arch=arm64' \
                      CODE_SIGN_IDENTITY="-" \
-                     CODE_SIGNING_REQUIRED=NO \
-                     CODE_SIGNING_ALLOWED=NO \
                      build 2>&1 | tee build.log
           
           # If build fails, show the relevant error lines
@@ -66,13 +66,35 @@ jobs:
           ls -la build/Build/Products/Release/
           test -d "build/Build/Products/Release/GitNotify.app" || exit 1
       
+      - name: Ad-hoc Sign and Remove Quarantine Attributes
+        run: |
+          APP_PATH="build/Build/Products/Release/GitNotify.app"
+          
+          # Re-sign the app with ad-hoc signature (ensures all nested components are signed)
+          codesign --force --deep --sign - "$APP_PATH"
+          
+          # Verify the signature
+          codesign --verify --verbose "$APP_PATH" || echo "Note: Ad-hoc signature applied"
+          
+          # Remove any extended attributes that could cause issues
+          xattr -cr "$APP_PATH"
+          
+          echo "App prepared for distribution"
+      
       - name: Get Version
         id: version
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
-          else
+            echo "IS_RELEASE=true" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref_type }}" = "tag" ]; then
             echo "VERSION=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            echo "IS_RELEASE=true" >> $GITHUB_OUTPUT
+          else
+            # For main branch pushes, use short commit SHA
+            SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+            echo "VERSION=dev-${SHORT_SHA}" >> $GITHUB_OUTPUT
+            echo "IS_RELEASE=false" >> $GITHUB_OUTPUT
           fi
       
       - name: Create DMG
@@ -127,6 +149,8 @@ jobs:
     name: Create GitHub Release
     needs: build
     runs-on: ubuntu-latest
+    # Only create releases for tags or manual workflow dispatch, not main branch pushes
+    if: github.ref_type == 'tag' || github.event_name == 'workflow_dispatch'
     permissions:
       contents: write
     
@@ -172,10 +196,28 @@ jobs:
             1. Download `GitNotify-${{ steps.version.outputs.VERSION }}.dmg` below
             2. Open the DMG file
             3. Drag **GitNotify** to your **Applications** folder
-            4. Launch GitNotify from Applications or Spotlight
-            5. Connect your GitHub Personal Access Token (with `notifications` scope)
+            4. **Important:** Before first launch, see "Bypass Gatekeeper" below
+            5. Launch GitNotify from Applications or Spotlight
+            6. Connect your GitHub Personal Access Token (with `notifications` scope)
             
-            > **First Launch:** If macOS shows a security warning, right-click the app and select "Open".
+            ### Bypass Gatekeeper (Required for First Launch)
+            
+            This app is not notarized with Apple. macOS will show a security warning. Use **one** of these methods:
+            
+            **Method 1 - Terminal (Recommended):**
+            ```bash
+            xattr -cr /Applications/GitNotify.app
+            ```
+            
+            **Method 2 - System Settings:**
+            1. Try to open the app (it will be blocked)
+            2. Go to **System Settings > Privacy & Security**
+            3. Scroll down and click **"Open Anyway"** next to the GitNotify message
+            
+            **Method 3 - Right-click:**
+            1. Right-click (or Control-click) on GitNotify.app
+            2. Select **"Open"** from the menu
+            3. Click **"Open"** in the dialog that appears
             
             ### Requirements
             
