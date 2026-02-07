@@ -65,7 +65,7 @@ final class SettingsViewModel: ObservableObject {
     
     // MARK: - Init
     
-    init(databaseManager: DatabaseManager = .shared, pollingService: PollingService = .shared) {
+    init(databaseManager: DatabaseManager = DatabaseManager.shared, pollingService: PollingService = PollingService.shared) {
         self.databaseManager = databaseManager
         self.pollingService = pollingService
         

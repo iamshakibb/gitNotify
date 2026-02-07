@@ -5,7 +5,7 @@ import Foundation
 /// Service for interacting with GitHub's REST API
 /// Using actor to ensure thread-safe access to mutable state
 actor GitHubAPIService {
-    static let shared = GitHubAPIService()
+    static nonisolated let shared = GitHubAPIService()
     
     private let baseURL = "https://api.github.com"
     private let apiVersion = "2022-11-28"

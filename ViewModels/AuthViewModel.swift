@@ -24,9 +24,9 @@ final class AuthViewModel: ObservableObject {
     // MARK: - Init
     
     init(
-        keychainManager: KeychainManager = .shared,
-        apiService: GitHubAPIService = .shared,
-        databaseManager: DatabaseManager = .shared
+        keychainManager: KeychainManager = KeychainManager.shared,
+        apiService: GitHubAPIService = GitHubAPIService.shared,
+        databaseManager: DatabaseManager = DatabaseManager.shared
     ) {
         self.keychainManager = keychainManager
         self.apiService = apiService

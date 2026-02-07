@@ -6,7 +6,7 @@ import GRDB
 /// Manages SQLite database operations using GRDB
 /// Using actor to ensure thread-safe access to database queue
 actor DatabaseManager {
-    static let shared = DatabaseManager()
+    static nonisolated let shared = DatabaseManager()
     
     private var dbQueue: DatabaseQueue?
     

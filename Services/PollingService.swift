@@ -4,8 +4,7 @@ import Combine
 // MARK: - Polling Service
 
 /// Manages background polling for GitHub notifications
-@MainActor
-final class PollingService: ObservableObject {
+final class PollingService: ObservableObject, @unchecked Sendable {
     static let shared = PollingService()
     
     @Published private(set) var isPolling = false
@@ -92,26 +91,35 @@ final class PollingService: ObservableObject {
     
     private func poll() async {
         guard let token = KeychainManager.shared.getGitHubToken() else {
-            lastError = PollingError.noToken
+            await MainActor.run {
+                lastError = PollingError.noToken
+            }
             onPollComplete?(.failure(PollingError.noToken))
             return
         }
         
-        lastError = nil
+        await MainActor.run {
+            lastError = nil
+        }
+        
+        let databaseManager = DatabaseManager.shared
+        let apiService = GitHubAPIService.shared
         
         do {
             // Load settings for Last-Modified header
-            let settings = try await DatabaseManager.shared.loadSettings()
-            await GitHubAPIService.shared.setLastModified(settings.lastModifiedHeader)
+            let settings = try await databaseManager.loadSettings()
+            await apiService.setLastModified(settings.lastModifiedHeader)
             
             // Fetch notifications
-            let result = try await GitHubAPIService.shared.fetchNotifications(
+            let result = try await apiService.fetchNotifications(
                 token: token,
                 all: false,
                 useLastModified: true
             )
             
-            lastPollDate = Date()
+            await MainActor.run {
+                lastPollDate = Date()
+            }
             
             // If not modified, nothing new
             if result.notModified {
@@ -120,18 +128,18 @@ final class PollingService: ObservableObject {
             }
             
             // Get existing notification IDs
-            let existingIds = try await DatabaseManager.shared.getNotificationIds()
+            let existingIds = try await databaseManager.getNotificationIds()
             
             // Find new notifications
             let newNotifications = result.notifications.filter { !existingIds.contains($0.id) }
             
             // Save to database
-            try await DatabaseManager.shared.upsertNotifications(result.notifications)
+            try await databaseManager.upsertNotifications(result.notifications)
             
             // Update Last-Modified in settings
             var updatedSettings = settings
-            updatedSettings.lastPollDate = lastPollDate
-            try await DatabaseManager.shared.saveSettings(updatedSettings)
+            updatedSettings.lastPollDate = await MainActor.run { lastPollDate }
+            try await databaseManager.saveSettings(updatedSettings)
             
             // Notify about new notifications
             if !newNotifications.isEmpty {
@@ -142,20 +150,26 @@ final class PollingService: ObservableObject {
             if let suggestedInterval = result.pollInterval {
                 let newInterval = TimeInterval(suggestedInterval)
                 if newInterval > pollInterval {
-                    updateInterval(newInterval)
+                    await MainActor.run {
+                        updateInterval(newInterval)
+                    }
                 }
             }
             
             onPollComplete?(.success(newNotifications.count))
             
         } catch {
-            lastError = error
+            await MainActor.run {
+                lastError = error
+            }
             onPollComplete?(.failure(error))
             print("Polling failed: \(error)")
         }
         
         // Update next poll date
-        nextPollDate = Date().addingTimeInterval(pollInterval)
+        await MainActor.run {
+            nextPollDate = Date().addingTimeInterval(pollInterval)
+        }
     }
 }
 

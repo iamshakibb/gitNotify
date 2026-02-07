@@ -48,11 +48,11 @@ final class NotificationsViewModel: ObservableObject {
     // MARK: - Init
     
     init(
-        apiService: GitHubAPIService = .shared,
-        databaseManager: DatabaseManager = .shared,
-        keychainManager: KeychainManager = .shared,
-        notificationService: SystemNotificationService = .shared,
-        pollingService: PollingService = .shared
+        apiService: GitHubAPIService = GitHubAPIService.shared,
+        databaseManager: DatabaseManager = DatabaseManager.shared,
+        keychainManager: KeychainManager = KeychainManager.shared,
+        notificationService: SystemNotificationService = SystemNotificationService.shared,
+        pollingService: PollingService = PollingService.shared
     ) {
         self.apiService = apiService
         self.databaseManager = databaseManager

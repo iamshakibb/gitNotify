@@ -5,9 +5,8 @@ import AppKit
 // MARK: - System Notification Service
 
 /// Manages macOS system notifications for new GitHub notifications
-@MainActor
-final class SystemNotificationService: NSObject, ObservableObject {
-    static let shared = SystemNotificationService()
+final class SystemNotificationService: NSObject, ObservableObject, @unchecked Sendable {
+    @MainActor static let shared = SystemNotificationService()
     
     @Published private(set) var isAuthorized = false
     @Published private(set) var authorizationStatus: UNAuthorizationStatus = .notDetermined

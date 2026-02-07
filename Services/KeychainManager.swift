@@ -4,7 +4,8 @@ import Security
 // MARK: - Keychain Manager
 
 /// Manages secure storage of sensitive data (GitHub token) in macOS Keychain
-final class KeychainManager: @unchecked Sendable {
+/// Thread-safe implementation using Security framework
+final class KeychainManager: Sendable {
     static let shared = KeychainManager()
     
     private let service: String
